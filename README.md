@@ -2,7 +2,7 @@
 This repo contains all the code, artifacts and instructions required to run our project.
 
 ## Prerequisites for local environment
-In order to build, test and run the code locally, Python 3.<fill here> needs to be installed.
+In order to build, test and run the code locally, Python 3.6 needs to be installed.
 
 ### Build
 ```
@@ -16,8 +16,9 @@ python3 test_calculate_next_state.py
 
 ### Run
 ```
-<insert commands here>
+python3 server.py
 ```
+Server will then listen on localhost:5000.
 
 ## Prerequisites for Docker Containers environment
 First, both Docker Engine runtime and Docker Compose need to be installed (on a linux machine, as the images are linux based).
