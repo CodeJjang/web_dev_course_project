@@ -5,11 +5,12 @@ import json
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
+@app.route('/calculate', methods=['POST'])
 def calc():
     return StateManager.process_request(request.json)
 
-
+if __name__ == '__main__':
+    app.run()
 # if __name__ == '__main__':
 #     s1 = '{"input": "", "state": null}'
 #     print(StateManager.process_request(s1))
