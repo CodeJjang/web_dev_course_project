@@ -3,13 +3,17 @@ from state_manager import StateManager
 from consts import INVALID_OP_STRING
 import json
 from calculator import Calculator
+import sys
+import unittest
+
 
 def json_2_obj(json_string):
     dict = json.loads(json_string)
-    return Calculator(dict['stack'], dict['display'], dict['is_operator_in_stack'], dict['is_stack_head_a_result'], dict['is_invalid_input'])
+    return Calculator(dict['stack'], dict['display'], dict['is_operator_in_stack'], dict['is_stack_head_a_result'],
+                      dict['is_invalid_input'])
+
 
 class TestCalculateNextState(unittest.TestCase):
-
     def setUp(self):
         self.s = None
 
@@ -132,3 +136,8 @@ class TestCalculateNextState(unittest.TestCase):
         self.s = json_2_obj(StateManager.calculate_next_state(self.s, '1'))
         self.s = json_2_obj(StateManager.calculate_next_state(self.s, '='))
         self.assertEqual('2', self.s.display)
+
+
+if __name__ == "__main__":
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCalculateNextState)
+    unittest.TextTestRunner(verbosity=2).run(suite)
