@@ -17,7 +17,8 @@ class StateManager(object):
 
     @staticmethod
     def process_request(state_input_pair_json):
-
+        if 'calculatorState' not in state_input_pair_json:
+            state_input_pair_json['calculatorState'] = None
         state_key_pair = StateInputPair(state_input_pair_json['calculatorState'], state_input_pair_json['input'])
         return StateManager.calculate_next_state(state_key_pair.state, state_key_pair.input)
 

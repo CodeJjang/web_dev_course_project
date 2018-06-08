@@ -9,9 +9,14 @@ In order to build, test and run the code locally, Python 3.6 needs to be install
 pip3 install -r requirements.txt
 ```
 
-### Test
+### Unit Tests
 ```
 python3 test_calculate_next_state.py
+```
+
+### Integration Tests
+```
+python3 server.py
 ```
 
 ### Run
@@ -25,17 +30,18 @@ First, both Docker Engine runtime and Docker Compose need to be installed (on a 
 
 ### Build
 ```
-docker build -t currency-calculator:v1.0 .
+sudo docker build -t currency-calculator:v1.0 .
 ```
 
 ### Run
 ```
-docker run -d -p 5000:5000 currency-calculator:v1.0
+sudo docker run -d -p 5000:5000 currency-calculator:v1.0
 ```
 
 ### Docker Compose
 ```
-docker-compose up
+sudo docker-compose build
+sudo docker-compose up
 ```
 Then, you may surf to `http://localhost/`.
 
