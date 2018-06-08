@@ -94,6 +94,163 @@ class ServerTestCase(unittest.TestCase):
         self.validate_display(state, expected_output)
         self.validate_stack(state, [expected_output])
 
+    def test_minus_op(self):
+        _state = None
+        inputs = ["1", "-", "2", "="]
+        expected_output = "-1"
+
+        # First request
+        body = self.generate_body(_state, inputs[0])
+        resp = self.post_calculate(self, body)
+        state = self.get_response_data(resp)
+
+        # Second request
+        body = self.generate_body(state, inputs[1])
+        resp = self.post_calculate(self, body)
+
+        # Validate second request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[0])
+        self.validate_stack(state, inputs[:2])
+
+        # Third request
+        body = self.generate_body(state, inputs[2])
+        resp = self.post_calculate(self, body)
+
+        # Validate third request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[2])
+        self.validate_stack(state, inputs[:3])
+
+        # Fourth request
+        body = self.generate_body(state, inputs[3])
+        resp = self.post_calculate(self, body)
+
+        # Validate fourth request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, expected_output)
+        self.validate_stack(state, [expected_output])
+
+    def test_mult_op(self):
+        _state = None
+        inputs = ["3", "*", "2", "="]
+        expected_output = "6"
+
+        # First request
+        body = self.generate_body(_state, inputs[0])
+        resp = self.post_calculate(self, body)
+        state = self.get_response_data(resp)
+
+        # Second request
+        body = self.generate_body(state, inputs[1])
+        resp = self.post_calculate(self, body)
+
+        # Validate second request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[0])
+        self.validate_stack(state, inputs[:2])
+
+        # Third request
+        body = self.generate_body(state, inputs[2])
+        resp = self.post_calculate(self, body)
+
+        # Validate third request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[2])
+        self.validate_stack(state, inputs[:3])
+
+        # Fourth request
+        body = self.generate_body(state, inputs[3])
+        resp = self.post_calculate(self, body)
+
+        # Validate fourth request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, expected_output)
+        self.validate_stack(state, [expected_output])
+
+    def test_div_op(self):
+        _state = None
+        inputs = ["3", "/", "2", "="]
+        expected_output = "1.5"
+
+        # First request
+        body = self.generate_body(_state, inputs[0])
+        resp = self.post_calculate(self, body)
+        state = self.get_response_data(resp)
+
+        # Second request
+        body = self.generate_body(state, inputs[1])
+        resp = self.post_calculate(self, body)
+
+        # Validate second request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[0])
+        self.validate_stack(state, inputs[:2])
+
+        # Third request
+        body = self.generate_body(state, inputs[2])
+        resp = self.post_calculate(self, body)
+
+        # Validate third request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[2])
+        self.validate_stack(state, inputs[:3])
+
+        # Fourth request
+        body = self.generate_body(state, inputs[3])
+        resp = self.post_calculate(self, body)
+
+        # Validate fourth request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, expected_output)
+        self.validate_stack(state, [expected_output])
+
+    def test_test_should_return_invalid_op_div_op_by_zero(self):
+        _state = None
+        inputs = ["3", "/", "0", "="]
+
+        # First request
+        body = self.generate_body(_state, inputs[0])
+        resp = self.post_calculate(self, body)
+        state = self.get_response_data(resp)
+
+        # Second request
+        body = self.generate_body(state, inputs[1])
+        resp = self.post_calculate(self, body)
+
+        # Validate second request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[0])
+        self.validate_stack(state, inputs[:2])
+
+        # Third request
+        body = self.generate_body(state, inputs[2])
+        resp = self.post_calculate(self, body)
+
+        # Validate third request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_display(state, inputs[2])
+        self.validate_stack(state, inputs[:3])
+
+        # Fourth request
+        body = self.generate_body(state, inputs[3])
+        resp = self.post_calculate(self, body)
+
+        # Validate fourth request
+        self.validate_next_state_response(resp)
+        state = self.get_response_data(resp)
+        self.validate_invalid_op(state)
 
     def test_should_return_invalid_op_initial_state_input_is_eq(self):
         _state = None
