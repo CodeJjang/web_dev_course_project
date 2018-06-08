@@ -22,8 +22,8 @@ class ServerTestCase(unittest.TestCase):
         resp = self.post_calculate(self, body)
         self.validate_next_state_response(resp)
         data = self.get_response_data(resp)
-        assert data['display'] == _input
-        assert data['stack'][0] == _input
+        self.validate_display(data, _input)
+        self.validate_stack(data, [_input])
 
     def test_multi_digit_number(self):
         _state = None
@@ -41,9 +41,8 @@ class ServerTestCase(unittest.TestCase):
         # Validate second request
         self.validate_next_state_response(resp)
         state = self.get_response_data(resp)
-        assert state['display'] == ''.join(inputs[:2])
-        assert state['stack'][0] == inputs[0]
-        assert state['stack'][1] == inputs[1]
+        self.validate_display(state, ''.join(inputs[:2]))
+        self.validate_stack(state, inputs[:2])
 
         # Third request
         body = self.generate_body(state, inputs[2])
@@ -52,22 +51,20 @@ class ServerTestCase(unittest.TestCase):
         # Validate third request
         self.validate_next_state_response(resp)
         state = self.get_response_data(resp)
-        assert state['display'] == ''.join(inputs[:3])
-        assert state['stack'][0] == inputs[0]
-        assert state['stack'][1] == inputs[1]
-        assert state['stack'][2] == inputs[2]
+        self.validate_display(state, ''.join(inputs[:3]))
+        self.validate_stack(state, inputs[:3])
 
-    # def test_plus_op(self):
-    #     _state = None
-    #     _input = "1"
-    #     initialStateBody = self.generate_body(_state, _input)
-    #     resp = self.post_calculate(self, initialStateBody)
-    #
-    #
-    #     self.validate_next_state_response(resp)
-    #     data = self.get_response_data(resp)
-    #     assert data['display'] == _input
-    #     assert data['stack'][0] == _input
+    def test_plus_op(self):
+        _state = None
+        _input = "1"
+        initialStateBody = self.generate_body(_state, _input)
+        resp = self.post_calculate(self, initialStateBody)
+
+
+        self.validate_next_state_response(resp)
+        data = self.get_response_data(resp)
+        assert data['display'] == _input
+        assert data['stack'][0] == _input
 
 
     def test_should_return_invalid_op_initial_state_input_is_eq(self):
@@ -77,11 +74,7 @@ class ServerTestCase(unittest.TestCase):
         resp = self.post_calculate(self, body)
         self.validate_next_state_response(resp)
         data = self.get_response_data(resp)
-        assert data['display'] == INVALID_OP_STRING
-        assert data['is_invalid_input'] is False
-        assert data['is_operator_in_stack'] is False
-        assert data['is_stack_head_a_result'] is False
-        assert len(data['stack']) == 0
+        self.validate_invalid_op(data)
 
     def test_should_return_invalid_op_initial_state_input_is_mult(self):
         _state = None
@@ -90,11 +83,7 @@ class ServerTestCase(unittest.TestCase):
         resp = self.post_calculate(self, body)
         self.validate_next_state_response(resp)
         data = self.get_response_data(resp)
-        assert data['display'] == INVALID_OP_STRING
-        assert data['is_invalid_input'] is False
-        assert data['is_operator_in_stack'] is False
-        assert data['is_stack_head_a_result'] is False
-        assert len(data['stack']) == 0
+        self.validate_invalid_op(data)
 
     def test_should_return_invalid_op_initial_state_input_is_plus(self):
         _state = None
@@ -103,11 +92,7 @@ class ServerTestCase(unittest.TestCase):
         resp = self.post_calculate(self, body)
         self.validate_next_state_response(resp)
         data = self.get_response_data(resp)
-        assert data['display'] == INVALID_OP_STRING
-        assert data['is_invalid_input'] is False
-        assert data['is_operator_in_stack'] is False
-        assert data['is_stack_head_a_result'] is False
-        assert len(data['stack']) == 0
+        self.validate_invalid_op(data)
 
     def test_should_return_invalid_op_initial_state_input_is_minus(self):
         _state = None
@@ -116,11 +101,7 @@ class ServerTestCase(unittest.TestCase):
         resp = self.post_calculate(self, body)
         self.validate_next_state_response(resp)
         data = self.get_response_data(resp)
-        assert data['display'] == INVALID_OP_STRING
-        assert data['is_invalid_input'] is False
-        assert data['is_operator_in_stack'] is False
-        assert data['is_stack_head_a_result'] is False
-        assert len(data['stack']) == 0
+        self.validate_invalid_op(data)
 
     def test_should_return_invalid_op_initial_state_input_is_unrecognized_char(self):
         _state = None
@@ -129,11 +110,7 @@ class ServerTestCase(unittest.TestCase):
         resp = self.post_calculate(self, body)
         self.validate_next_state_response(resp)
         data = self.get_response_data(resp)
-        assert data['display'] == INVALID_OP_STRING
-        assert data['is_invalid_input'] is False
-        assert data['is_operator_in_stack'] is False
-        assert data['is_stack_head_a_result'] is False
-        assert len(data['stack']) == 0
+        self.validate_invalid_op(data)
 
     def test_should_return_500_no_calculatorstate_field(self):
         body = dict(
@@ -166,6 +143,19 @@ class ServerTestCase(unittest.TestCase):
         resp = self.post_calculate(self, body)
         assert resp.status_code == 500
 
+
+    def validate_display(self, data, value):
+        assert data['display'] == value
+
+    def validate_stack(self, data, value):
+        assert data['stack'] == value
+
+    def validate_invalid_op(self, data):
+        assert data['display'] == INVALID_OP_STRING
+        assert data['is_invalid_input'] is False
+        assert data['is_operator_in_stack'] is False
+        assert data['is_stack_head_a_result'] is False
+        assert len(data['stack']) == 0
 
     def validate_next_state_response(self,resp):
         assert resp.status_code == 200
