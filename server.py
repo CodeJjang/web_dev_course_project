@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, abort
 from state_manager import StateManager
 from state_input_pair import StateInputPair
 import json
@@ -7,7 +7,11 @@ app = Flask(__name__)
 
 @app.route('/calculate', methods=['POST'])
 def calc():
-    return StateManager.process_request(request.json)
+    try:
+        return StateManager.process_request(request.json)
+    except:
+        abort(500)
+
 
 if __name__ == '__main__':
     app.run()
