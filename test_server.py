@@ -25,6 +25,17 @@ class ServerTestCase(unittest.TestCase):
         self.validate_display(data, _input)
         self.validate_stack(data, [_input])
 
+    def test_initial_state_no_calculatorstate_field(self):
+        _input = "1"
+        body = dict(
+            input=_input
+        )
+        resp = self.post_calculate(self, body)
+        self.validate_next_state_response(resp)
+        data = self.get_response_data(resp)
+        self.validate_display(data, _input)
+        self.validate_stack(data, [_input])
+
     def test_multi_digit_number(self):
         _state = None
         inputs = ["1", "2", "3"]
@@ -214,7 +225,7 @@ class ServerTestCase(unittest.TestCase):
         self.validate_display(state, expected_output)
         self.validate_stack(state, [expected_output])
 
-    def test_test_should_return_invalid_op_div_op_by_zero(self):
+    def test_should_return_invalid_op_div_op_by_zero(self):
         _state = None
         inputs = ["3", "/", "0", "="]
 
@@ -296,13 +307,6 @@ class ServerTestCase(unittest.TestCase):
         self.validate_next_state_response(resp)
         data = self.get_response_data(resp)
         self.validate_invalid_op(data)
-
-    def test_should_return_500_no_calculatorstate_field(self):
-        body = dict(
-            input="1"
-        )
-        resp = self.post_calculate(self, body)
-        assert resp.status_code == 500
 
     def test_should_return_500_no_input_field(self):
         body = dict(
