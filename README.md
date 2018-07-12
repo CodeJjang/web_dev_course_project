@@ -16,7 +16,7 @@ python3 test_calculate_next_state.py
 
 ### Integration Tests
 ```
-python3 server.py
+python3 test_server.py
 ```
 
 ### Run
